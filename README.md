@@ -12,7 +12,7 @@ Download the latest official releases at https://github.com/bradjasper/focus-ext
 
 Specific browsers may also have versions released on their extension pages:
 
-**Firefox**: https://addons.mozilla.org/en-us/firefox/addon/focus-1/
+**Firefox**: https://addons.mozilla.org/en-us/firefox/addon/focus-app/
 
 
 ## Install
