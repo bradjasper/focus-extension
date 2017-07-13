@@ -6,7 +6,20 @@ It works out of the box with Safari and Chrome, but needs an extension for other
 
 This single extension should work for all of those other browsers.
 
-## Official extension links
+## Download
 
-Firefox: https://addons.mozilla.org/en-us/firefox/addon/focus-1/
+Download the latest official releases at https://github.com/bradjasper/focus-extension/releases
 
+Specific browsers may also have versions released on their extension pages:
+
+**Firefox**: https://addons.mozilla.org/en-us/firefox/addon/focus-1/
+
+
+## Install
+
+Most browsers have a way to load an extension from a file. Download the extension and load it into your preferred browser.
+
+
+## Help
+
+If things aren't working, please contact support@heyfocus.com
