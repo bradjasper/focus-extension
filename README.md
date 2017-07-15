@@ -10,11 +10,6 @@ This single extension should work for all of those other browsers.
 
 Download the latest official releases at https://github.com/bradjasper/focus-extension/releases
 
-Specific browsers may also have versions released on their extension pages:
-
-**Firefox**: https://addons.mozilla.org/en-us/firefox/addon/focus-app/
-
-
 ## Install
 
 Most browsers have a way to load an extension from a file. Download the extension and load it into your preferred browser.
