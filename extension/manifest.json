@@ -12,11 +12,5 @@
     "permissions": ["webRequest", "webRequestBlocking", "tabs", "<all_urls>"],
     "background": {
         "scripts": ["browserdetect.js", "config.js", "utils.js", "reconnecting-websocket.js", "focus-connection.js", "focus.js"]
-    },
-    "applications": {
-        "gecko": {
-            "id": "focus@bradjasper.com",
-            "strict_min_version": "53.0"
-        }
     }
 }
