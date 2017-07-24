@@ -1,6 +1,10 @@
 // Quick & easy browser check... chrome uses chrome. object, everything else uses browser.
 function getBrowserType() {
-	return (BrowserDetect.browser == "Chrome" ? chrome : browser);
+    if (BrowserDetect.browser == "Firefox") {
+        return browser
+    } else {
+        return chrome;
+    }
 }
 
 // https://stackoverflow.com/a/26420284/637173
