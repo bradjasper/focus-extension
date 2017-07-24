@@ -5,7 +5,7 @@ conn.version = config.version;
 conn.platform = BrowserDetect.browser;
 
 var isFocusing = false;
-var isWhitelist = false;
+var enableCloseBrowserTabs = false;
 var redirectURL;
 var regexSites = [];
 var compiledRegexSites = [];
@@ -15,22 +15,24 @@ function onBeforeRequestHandler(info) {
         return {};
     }
 
-    if (urlIsBlocked(info.url, isWhitelist, compiledRegexSites)) {
-        var url = redirectURL + "?focus_url=" + encodeURIComponent(info.url);
-        return {redirectUrl: url};
+    if (urlIsBlocked(info.url, compiledRegexSites)) {
+        if (enableCloseBrowserTabs) {
+            chrome.tabs.remove(info.tabId);
+        } else {
+            var url = redirectURL + "?focus_url=" + encodeURIComponent(info.url);
+            return {redirectUrl: url};
+        }
     }
 }
 
 function reset() {
     isFocusing = false;
-    isWhitelist = false;
     regexSites = [];
     compiledRegexSites = [];
     vendor.webRequest.onBeforeRequest.removeListener(onBeforeRequestHandler);
 }
 
 conn.focus = function(data) {
-
     vendor.webRequest.onBeforeRequest.removeListener(onBeforeRequestHandler);
 
     regexSites = [];
@@ -44,14 +46,14 @@ conn.focus = function(data) {
     regexSites = data.regexSites;
     compiledRegexSites = compileRegexSites(data.regexSites);
     isFocusing = true;
-    isWhitelist = !!data.whitelist;
+    enableCloseBrowserTabs = data.enableCloseBrowserTabs;
 	redirectURL = data.redirectURL ? data.redirectURL : config.blockURL;
 
     var filters = {urls: ["<all_urls>"], types: ["main_frame", "sub_frame"]};
     var extraInfoSpec = ["blocking"];
     vendor.webRequest.onBeforeRequest.addListener(onBeforeRequestHandler, filters, extraInfoSpec);
 
-    reloadShouldBeBlockedPages(isWhitelist, compiledRegexSites);
+    reloadShouldBeBlockedPages(compiledRegexSites);
 };
 
 conn.unfocus = function() {

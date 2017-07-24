@@ -50,13 +50,13 @@ function urlIsBlockedPage(url) {
     return url.startsWith(config.blockURL);
 }
 
-function urlIsBlocked(url, isWhitelist, compiledRegexSites) {
+function urlIsBlocked(url, compiledRegexSites) {
     if (url == null) return false;
 
-    var isBlocked = !!isWhitelist;
+    var isBlocked = false;
     for (var compiledRegexSite of compiledRegexSites) {
         if (compiledRegexSite.compiledRegex.test(url)) {
-            if (isWhitelist || compiledRegexSite.whitelist) {
+            if (compiledRegexSite.whitelist) {
                 return false;
             }
 
@@ -98,15 +98,15 @@ function reloadBlockedPages() {
     });
 }
 
-function reloadShouldBeBlockedPages(isWhitelist, compiledRegexSites) {
+function reloadShouldBeBlockedPages(compiledRegexSites) {
     forAllTabs((tab) => {
         if (urlIsBlockedPage(tab.url)) {
             var blockedUrl = getFocusURLFromProxyURL(tab.url);
-            if (!urlIsBlocked(blockedUrl, isWhitelist, compiledRegexSites)) {
+            if (!urlIsBlocked(blockedUrl, compiledRegexSites)) {
                 chrome.tabs.reload(tab.id);
             }
         } else {
-            if (urlIsBlocked(tab.url, isWhitelist, compiledRegexSites)) {
+            if (urlIsBlocked(tab.url, compiledRegexSites)) {
                 chrome.tabs.reload(tab.id);
             }
         }
