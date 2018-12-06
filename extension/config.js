@@ -1,5 +1,5 @@
 var config = {};
-config.version = "1.9.0";
+config.version = "2.2.0";
 config.min_port = 8913;
 config.max_port = 8918;
 config.host_local = "localhost";
