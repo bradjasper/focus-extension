@@ -47,7 +47,13 @@ function patternToRegExp(pattern){
 }
 
 function urlIsBlockedPage(url) {
-    return url.startsWith(config.blockURL);
+    for (const block_url of config.block_urls) {
+        if (url.startsWith(block_url)) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 function urlIsBlocked(url, compiledRegexSites) {

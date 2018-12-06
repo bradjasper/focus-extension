@@ -54,7 +54,7 @@ function ReconnectingWebSocket(url, protocols) {
     this.debug = false;
 
     this.reconnectIntervalStep = 25;
-    this.defaultReconnectInterval = 50;
+    this.defaultReconnectInterval = 1350;
     this.maxReconnectInterval = 5000;
     this.reconnectInterval = this.defaultReconnectInterval;
 
@@ -64,8 +64,7 @@ function ReconnectingWebSocket(url, protocols) {
     var ws;
     var forcedClose = false;
     var timedOut = false;
-    
-    this.url = url;
+
     this.protocols = protocols;
     this.readyState = WebSocket.CONNECTING;
     this.URL = url; // Public API
@@ -86,34 +85,34 @@ function ReconnectingWebSocket(url, protocols) {
     };
 
     function doconnect(reconnectAttempt) {
-        ws = new WebSocket(url, protocols);
-        
+        ws = new WebSocket(self.URL, protocols);
+
         self.onconnecting();
         if (self.debug || ReconnectingWebSocket.debugAll) {
-            console.debug('ReconnectingWebSocket', 'attempt-connect', url);
+            console.debug('ReconnectingWebSocket', 'attempt-connect', self.URL);
         }
-        
+
         var localWs = ws;
         var timeout = setTimeout(function() {
             if (self.debug || ReconnectingWebSocket.debugAll) {
-                console.debug('ReconnectingWebSocket', 'connection-timeout', url);
+                console.debug('ReconnectingWebSocket', 'connection-timeout', self.URL);
             }
             timedOut = true;
             localWs.close();
             timedOut = false;
         }, self.timeoutInterval);
-        
+
         ws.onopen = function(event) {
             self.reconnectInterval = self.defaultReconnectInterval;
             clearTimeout(timeout);
             if (self.debug || ReconnectingWebSocket.debugAll) {
-                console.debug('ReconnectingWebSocket', 'onopen', url);
+                console.debug('ReconnectingWebSocket', 'onopen', self.URL);
             }
             self.readyState = WebSocket.OPEN;
             reconnectAttempt = false;
             self.onopen(event);
         };
-        
+
         ws.onclose = function(event) {
             clearTimeout(timeout);
             ws = null;
@@ -125,7 +124,7 @@ function ReconnectingWebSocket(url, protocols) {
                 self.onconnecting();
                 if (!reconnectAttempt && !timedOut) {
                     if (self.debug || ReconnectingWebSocket.debugAll) {
-                        console.debug('ReconnectingWebSocket', 'onclose', url);
+                        console.debug('ReconnectingWebSocket', 'onclose', self.URL);
                     }
                     self.onclose(event);
                 }
@@ -137,9 +136,9 @@ function ReconnectingWebSocket(url, protocols) {
         };
         ws.onmessage = function(event) {
             if (self.debug || ReconnectingWebSocket.debugAll) {
-                console.debug('ReconnectingWebSocket', 'onmessage', url, event.data);
+                console.debug('ReconnectingWebSocket', 'onmessage', self.URL, event.data);
             }
-        	self.onmessage(event);
+            self.onmessage(event);
         };
         ws.onerror = function(event) {
 
@@ -149,20 +148,20 @@ function ReconnectingWebSocket(url, protocols) {
             }
 
             if (self.debug || ReconnectingWebSocket.debugAll) {
-                console.debug('ReconnectingWebSocket', 'onerror', url, event);
+                console.debug('ReconnectingWebSocket', 'onerror', self.URL, event);
             }
             self.onerror(event);
         };
     }
 
     this.connect = function() {
-      doconnect(url);
+        doconnect(self.URL);
     };
 
     this.send = function(data) {
         if (ws) {
             if (self.debug || ReconnectingWebSocket.debugAll) {
-                console.debug('ReconnectingWebSocket', 'send', url, data);
+                console.debug('ReconnectingWebSocket', 'send', self.URL, data);
             }
             return ws.send(data);
         } else {

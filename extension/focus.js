@@ -1,6 +1,6 @@
 var vendor = getBrowserType();
 
-var conn = new FocusConnection(config.wsendpoint);
+var conn = new FocusConnection();
 conn.version = config.version;
 conn.platform = BrowserDetect.browser;
 
@@ -47,7 +47,7 @@ conn.focus = function(data) {
     compiledRegexSites = compileRegexSites(data.regexSites);
     isFocusing = true;
     enableCloseBrowserTabs = data.enableCloseBrowserTabs;
-	redirectURL = data.redirectURL ? data.redirectURL : config.blockURL;
+	redirectURL = data.redirectURL;
 
     var filters = {urls: ["<all_urls>"], types: ["main_frame", "sub_frame"]};
     var extraInfoSpec = ["blocking"];
