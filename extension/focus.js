@@ -4,6 +4,7 @@ var conn = new FocusConnection();
 conn.version = config.version;
 conn.platform = BrowserDetect.browser;
 
+var isWhitelist = false;
 var isFocusing = false;
 var enableCloseBrowserTabs = false;
 var redirectURL;
@@ -15,7 +16,7 @@ function onBeforeRequestHandler(info) {
         return {};
     }
 
-    if (urlIsBlocked(info.url, compiledRegexSites)) {
+    if (urlIsBlocked(info.url, compiledRegexSites, isWhitelist)) {
         if (enableCloseBrowserTabs) {
             chrome.tabs.remove(info.tabId);
         } else {
@@ -26,6 +27,7 @@ function onBeforeRequestHandler(info) {
 }
 
 function reset() {
+    isWhitelist = false;
     isFocusing = false;
     regexSites = [];
     compiledRegexSites = [];
@@ -43,6 +45,8 @@ conn.focus = function(data) {
     }
 
     console.log("Focusing");
+
+    isWhitelist = data.whitelist;
     regexSites = data.regexSites;
     compiledRegexSites = compileRegexSites(data.regexSites);
     isFocusing = true;
