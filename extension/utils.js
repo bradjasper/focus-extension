@@ -95,7 +95,7 @@ function getFocusURLFromProxyURL(blockedURL) {
 
 function forAllTabs(cb) {
     var vendor = getBrowserType();
-    vendor.tabs.query({}, function(tabs) {
+    vendor.tabs.query({discarded: false}, function(tabs) {
         for (var tab of tabs) {
             cb(tab);
         }
