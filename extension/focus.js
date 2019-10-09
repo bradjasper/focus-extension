@@ -11,31 +11,14 @@ var redirectURL;
 var regexSites = [];
 var compiledRegexSites = [];
 
-function onBeforeRequestHandler(info) {
-    if (info.url.indexOf("?focus_url=") != -1) {
-        return {};
-    }
-
-    if (urlIsBlocked(info.url, compiledRegexSites, isWhitelist)) {
-        if (enableCloseBrowserTabs) {
-            chrome.tabs.remove(info.tabId);
-        } else {
-            var url = redirectURL + "?focus_url=" + encodeURIComponent(info.url);
-            return {redirectUrl: url};
-        }
-    }
-}
-
 function reset() {
     isWhitelist = false;
     isFocusing = false;
     regexSites = [];
     compiledRegexSites = [];
-    vendor.webRequest.onBeforeRequest.removeListener(onBeforeRequestHandler);
 }
 
 conn.focus = function(data) {
-    vendor.webRequest.onBeforeRequest.removeListener(onBeforeRequestHandler);
 
     regexSites = [];
     compiledRegexSites = [];
@@ -55,9 +38,10 @@ conn.focus = function(data) {
 
     var filters = {urls: ["<all_urls>"], types: ["main_frame", "sub_frame"]};
     var extraInfoSpec = ["blocking"];
-    vendor.webRequest.onBeforeRequest.addListener(onBeforeRequestHandler, filters, extraInfoSpec);
 
     reloadShouldBeBlockedPages(compiledRegexSites);
+
+    processTabs();
 };
 
 conn.unfocus = function() {
@@ -72,4 +56,46 @@ conn.cleanup = function() {
 };
 
 conn.connect();
+
+function handleBeforeNavigate(navDetails) {
+    if (!isFocusing) { return }
+    //console.log("handleBeforeNavigate");
+
+    if (navDetails.frameId == 0) {
+        checkTabURL(navDetails.tabId, navDetails.url);
+    }
+}
+
+function processTabs() {
+    //console.log("processTabs");
+
+    browser.tabs.query({}, function(tabs) {
+        if (browser.runtime.lastError) {
+            console.log("error fetching tabs", error);
+            return;
+        }
+
+        for (let tab of tabs) {
+            checkTabURL(tab.id, tab.url);
+        }
+    });
+}
+
+function checkTabURL(tabId, url) {
+    if (url.indexOf("about:") == 0) {
+        return false;
+    }
+
+    if (urlIsBlocked(url, compiledRegexSites, isWhitelist)) {
+        if (enableCloseBrowserTabs) {
+            chrome.tabs.remove(tabId);
+        } else {
+            var newURL = redirectURL + "?focus_url=" + encodeURIComponent(url);
+            chrome.tabs.update(tabId, { url: newURL });
+        }
+        return true;
+    }
+}
+
+browser.webNavigation.onBeforeNavigate.addListener(handleBeforeNavigate);
 

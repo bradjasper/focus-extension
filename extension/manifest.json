@@ -1,7 +1,7 @@
 {
     "name": "Focus",
     "author": "Brad Jasper",
-    "version": "2.4",
+    "version": "2.5",
     "manifest_version": 2,
     "description": "Official browser extension for Focus, a macOS app that blocks distracting websites and applications so you can be more productive.",
     "icons": {
@@ -9,7 +9,7 @@
         "48": "icon_48.png",
         "128": "icon_128.png"
     },
-    "permissions": ["webRequest", "webRequestBlocking", "tabs", "<all_urls>"],
+    "permissions": ["webNavigation", "tabs"],
     "background": {
         "scripts": ["browserdetect.js", "config.js", "utils.js", "reconnecting-websocket.js", "focus-connection.js", "focus.js"]
     }
