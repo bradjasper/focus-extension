@@ -69,8 +69,8 @@ function handleBeforeNavigate(navDetails) {
 function processTabs() {
     //console.log("processTabs");
 
-    browser.tabs.query({}, function(tabs) {
-        if (browser.runtime.lastError) {
+    vendor.tabs.query({}, function(tabs) {
+        if (vendor.runtime.lastError) {
             console.log("error fetching tabs", error);
             return;
         }
@@ -97,5 +97,5 @@ function checkTabURL(tabId, url) {
     }
 }
 
-browser.webNavigation.onBeforeNavigate.addListener(handleBeforeNavigate);
+vendor.webNavigation.onBeforeNavigate.addListener(handleBeforeNavigate);
 
