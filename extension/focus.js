@@ -18,7 +18,7 @@ function reset() {
     compiledRegexSites = [];
 }
 
-conn.focus = function(data) {
+conn.focus = function (data) {
 
     regexSites = [];
     compiledRegexSites = [];
@@ -34,9 +34,9 @@ conn.focus = function(data) {
     compiledRegexSites = compileRegexSites(data.regexSites);
     isFocusing = true;
     enableCloseBrowserTabs = data.enableCloseBrowserTabs;
-	redirectURL = data.redirectURL;
+    redirectURL = data.redirectURL;
 
-    var filters = {urls: ["<all_urls>"], types: ["main_frame", "sub_frame"]};
+    var filters = { urls: ["<all_urls>"], types: ["main_frame", "sub_frame"] };
     var extraInfoSpec = ["blocking"];
 
     reloadShouldBeBlockedPages(compiledRegexSites);
@@ -44,13 +44,13 @@ conn.focus = function(data) {
     processTabs();
 };
 
-conn.unfocus = function() {
+conn.unfocus = function () {
     console.log("Unfocusing");
     reset();
     reloadBlockedPages();
 };
 
-conn.cleanup = function() {
+conn.cleanup = function () {
     console.log("Cleaning up request handler");
     reset();
 };
@@ -69,7 +69,7 @@ function handleBeforeNavigate(navDetails) {
 function processTabs() {
     //console.log("processTabs");
 
-    vendor.tabs.query({}, function(tabs) {
+    vendor.tabs.query({}, function (tabs) {
         if (vendor.runtime.lastError) {
             console.log("error fetching tabs", error);
             return;
@@ -90,7 +90,8 @@ function checkTabURL(tabId, url) {
         if (enableCloseBrowserTabs) {
             chrome.tabs.remove(tabId);
         } else {
-            var newURL = redirectURL + "?focus_url=" + encodeURIComponent(url);
+            var blockURL = chrome.extension.getURL('/block.html');
+            var newURL = `${blockURL}?url=${encodeURIComponent(url)}`;
             chrome.tabs.update(tabId, { url: newURL });
         }
         return true;
