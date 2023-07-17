@@ -2,7 +2,7 @@
 
 Focus (https://heyfocus.com) is a Mac application that blocks distractions like Facebook, Twitter, Reddit, etc...
 
-It works out of the box with Safari, Chrome and Vivaldi, but needs an extension for other browsers like Firefox, Opera and Brave.
+It works out of the box with Safari, Chrome and Vivaldi, but needs an extension for other browsers like Firefox.
 
 This single extension should work for all of those other browsers.
 
