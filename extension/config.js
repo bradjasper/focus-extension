@@ -1,5 +1,9 @@
+const vendor = (BrowserDetect.browser == "Firefox" ? browser : chrome);
+const manifestData = vendor.runtime.getManifest();
+const version = manifestData.version;
+
 var config = {};
-config.version = "2.8.0";
+config.version = version;
 config.min_port = 8913;
 config.max_port = 8918;
 config.host_local = "localhost";

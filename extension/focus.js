@@ -1,103 +1,60 @@
-var vendor = getBrowserType();
+const blockURL = vendor.extension.getURL("/block.html");
 
-var conn = new FocusConnection();
+const conn = new FocusConnection();
 conn.version = config.version;
 conn.platform = BrowserDetect.browser;
 
-var isWhitelist = false;
-var isFocusing = false;
-var enableCloseBrowserTabs = false;
-var redirectURL;
-var regexSites = [];
-var compiledRegexSites = [];
 
-function reset() {
-    isWhitelist = false;
-    isFocusing = false;
-    regexSites = [];
-    compiledRegexSites = [];
-}
 
-conn.focus = function (data) {
-
-    regexSites = [];
-    compiledRegexSites = [];
-
-    if (!data.regexSites || data.regexSites.length == 0) {
-        return;
-    }
-
-    console.log("Focusing");
-
-    isWhitelist = data.whitelist;
-    regexSites = data.regexSites;
-    compiledRegexSites = compileRegexSites(data.regexSites);
-    isFocusing = true;
-    redirectURL = data.redirectURL;
-
-    var filters = { urls: ["<all_urls>"], types: ["main_frame", "sub_frame"] };
-    var extraInfoSpec = ["blocking"];
-
-    reloadShouldBeBlockedPages(compiledRegexSites);
-
-    processTabs();
-};
-
-conn.unfocus = function () {
-    console.log("Unfocusing");
-    reset();
-    reloadBlockedPages();
-};
-
-conn.cleanup = function () {
-    console.log("Cleaning up request handler");
-    reset();
-};
-
-conn.connect();
-
-conn.focus({ regexSites: [{ regexUrlStr: ".*reddit.com.*" }] });
-
-function handleBeforeNavigate(navDetails) {
-    if (!isFocusing) { return }
-    //console.log("handleBeforeNavigate");
-
-    if (navDetails.frameId == 0) {
-        checkTabURL(navDetails.tabId, navDetails.url);
-    }
-}
-
-function processTabs() {
-    //console.log("processTabs");
-
-    vendor.tabs.query({}, function (tabs) {
-        if (vendor.runtime.lastError) {
-            console.log("error fetching tabs", error);
-            return;
-        }
-
-        for (let tab of tabs) {
-            checkTabURL(tab.id, tab.url);
+function processFrontmostTab() {
+    console.log("Processing front-most tab");
+    vendor.windows.getCurrent({ populate: true }, function (currentWindow) {
+        for (var i = 0; i < currentWindow.tabs.length; i++) {
+            const tab = currentWindow.tabs[i];
+            if (tab.active) {
+                processTab(tab.id, tab.url);
+                break;
+            }
         }
     });
 }
 
-function checkTabURL(tabId, url) {
-    if (url.indexOf("about:") == 0) {
-        return false;
-    }
+function handleBeforeNavigate(navDetails) {
+    if (!conn.isFocusing) { return }
 
-    if (urlIsBlocked(url, compiledRegexSites, isWhitelist)) {
-        const quote = "Hello";
-        const author = "World";
-        var blockURL = chrome.extension.getURL('/block.html');
-        var newURL = `${blockURL}?url=${encodeURIComponent(url)}&quote=${encodeURIComponent(quote)}&author=${encodeURIComponent(author)}`;
-        chrome.tabs.update(tabId, { url: newURL });
-        return true;
+    if (navDetails.frameId == 0) {
+        processTab(navDetails.tabId, navDetails.url);
     }
+}
 
-    return false;
+function convertRedirectURLToLocalTemplate(redirectURL) {
+    const url = new URL(redirectURL);
+    const templateURL = new URL(blockURL);
+    templateURL.search = url.search;
+    return templateURL.toString();
+}
+
+
+function processTab(tabId, url) {
+    if (url.indexOf(blockURL) == 0) return;
+    conn.check(tabId, url);
 }
 
 vendor.webNavigation.onBeforeNavigate.addListener(handleBeforeNavigate);
 
+conn.block = function (data) {
+    if (!data.url) return;
+    if (!data.redirectURL) return;
+    if (!data.tabId) return;
+    console.log(`blocking ${data.url}`);
+
+    const redirectURL = convertRedirectURLToLocalTemplate(data.redirectURL);
+
+    vendor.tabs.update(data.tabId, { url: redirectURL });
+};
+
+conn.onfocus = function () {
+    processFrontmostTab();
+}
+
+conn.connect();

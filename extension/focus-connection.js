@@ -5,6 +5,7 @@
 //
 function FocusConnection() {
 
+    this.isFocusing = false;
     this.version = "0.0";
     this.platform = "unknown";
     this.min_port = config.min_port;
@@ -21,16 +22,36 @@ function FocusConnection() {
 
     console.log("Creating new Focus connection to " + endpoint);
 
-    var allowedMsgs = ["focus", "unfocus"];
-
-    // Overridden by browser extensions
-    this.focus = function() {};
-    this.unfocus = function() {};
-    this.cleanup = function() {};
+    var allowedMsgs = ["focus", "unfocus", "block"];
 
     var ws = new ReconnectingWebSocket(endpoint);
 
-    ws.ping = function() {
+    this.focus = () => {
+        console.log("Focus");
+        this.isFocusing = true;
+        this.onfocus();
+    };
+
+    this.unfocus = function () {
+        console.log("Unfocus");
+        this.isFocusing = false;
+    };
+
+    this.cleanup = function () {
+        console.log("Cleanup");
+        this.isFocusing = false;
+    };
+
+    this.check = function (tabId, url) {
+        if (!this.isFocusing) return false;
+        ws.send(JSON.stringify({
+            "msg": "check",
+            "tabId": tabId,
+            "url": url
+        }));
+    };
+
+    ws.ping = function () {
         console.log("Sending ping to Focus");
         ws.send(JSON.stringify({
             "msg": "ping",
@@ -39,12 +60,12 @@ function FocusConnection() {
         }));
     };
 
-    ws.onopen = function() {
+    ws.onopen = function () {
         console.log("Websocket is open");
         ws.ping();
-    };
+    }
 
-    ws.onerror = function(err) {
+    ws.onerror = function (err) {
         console.log("Websocket error: " + err);
         self.port = self.port - 1;
         if (self.port < self.min_port) {
@@ -55,12 +76,12 @@ function FocusConnection() {
         self.cleanup();
     };
 
-    ws.onclose = function() {
+    ws.onclose = function () {
         console.log("Websocket is closed");
         self.cleanup();
     };
 
-    ws.onmessage = function(evt) {
+    ws.onmessage = function (evt) {
         console.log("Received message from server");
 
         try {
