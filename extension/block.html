@@ -1,92 +1,292 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8">
     <title>Focus</title>
+    <link href="data:image/x-icon;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAArtJREFUOBF9UktIVFEY/s6de+eOd+7MqONbaEylhUqYIBaCC0PLMmih0CJqUbpIrF0YEZEQtMiNUBBmCzdBj5URSIitMiECexkO+Uh6mK+ZufNyHvf0n2vSGNIH3+Gc/zvff/7zn8OwO3IofJjoI3LiHHGcaBD/i0JS79ttCPk8mLdJWOlsVaarK6S3jGGVtEGiSL4r9jNgoesA/P4L4Iu94F4Nn653q/65Z27+/rHbaDkov6Q9s+Su3M5AawuFNJkaakfySPlfcT4Ao/UhkuNDek5xnmTtffIiOd83GEuZHPXkDEp/Etw8XYPlTPMMFfz0M5I2gJ2/Ef3JuWgF0NGi7G1uUITvqhWgIYdSr053ITV8AvHjlVjUFaypMj6S1k9scKiYuNbtiIurvB7Ro4rKfkFia6SpRHRSAkOVYFQxfKkBEx2/LYQMlOoagmN3nbzAK81mdVYts2yHn/RmqRSoPQlbasK06yNcLa8F2yAhkmEW02/0CpfaL0Y214u9mtpWWSD7PJsU90khIJwPeOyweoQYmElCXLgyYURgpDQ16OyppzMJDA4aTYl+xswMuHhjCzEK0qSIKG9FrHEfFOme3teYz6g5Aqm5gDhxXnRzfBKmPWp9OFAFpim5PN0sSwvBqT0gvYnMo9q5Os1WpFtl8kA8xkObTtJe0SshQUcWbYDnN8GWO4r0knHsbG7e0X7dpnlqU5Efp8xwKJe5lCWp0KlLul0OD0wu8o34MHknti4OZFMpU5chb44hHV7o6K1215xx0wYLybWvMD48SkTePI+b6fg6ognR6EZiTFxBIEBVtN1CSn4HXsEkeTuxJSrePXDVddqUguIVMq9TsJ1I7RK93AkXLa9AUXqUkrKEkldipmPBaPL7omQGA3Zwfof0AaJlFtZ/E4iYgEI8RCwjileZI04R08Qd+A3YMOhOPmLsqwAAAABJRU5ErkJggg==" rel="icon" type="image/x-icon" />
     <style>
+        /*! minireset.css v0.0.3 | MIT License | github.com/jgthms/minireset.css */
+        html,
+        body,
+        p,
+        ol,
+        ul,
+        li,
+        dl,
+        dt,
+        dd,
+        blockquote,
+        figure,
+        fieldset,
+        legend,
+        textarea,
+        pre,
+        iframe,
+        hr,
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            margin: 0;
+            padding: 0
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-size: 100%;
+            font-weight: normal
+        }
+
+        ul {
+            list-style: none
+        }
+
+        button,
+        input,
+        select,
+        textarea {
+            margin: 0
+        }
+
+        html {
+            box-sizing: border-box
+        }
+
+        *,
+        *:before,
+        *:after {
+            box-sizing: inherit
+        }
+
+        img,
+        embed,
+        iframe,
+        object,
+        audio,
+        video {
+            height: auto;
+            max-width: 100%
+        }
+
+        iframe {
+            border: 0
+        }
+
+        table {
+            border-collapse: collapse;
+            border-spacing: 0
+        }
+
+        td,
+        th {
+            padding: 0;
+            text-align: left
+        }
+
+        html,
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
-                Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji",
-                "Segoe UI Emoji", "Segoe UI Symbol";
-            background-color: #111827;
-            color: #f9fafb;
-            padding: 0px;
-            margin: 0px;
             height: 100%;
-            overflow: hidden;
         }
 
-        #blocked {
-            display: flex;
-            font-weight: 200;
-            justify-content: center;
-            align-items: center;
-            width: 100vw;
-            height: 100vh;
-            font-size: 6rem;
-            text-align: center;
-            margin-top: -50px;
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
         }
 
-        #blocked strong {
-            font-weight: 400;
+        body.dark {
+            background: #111111;
         }
 
-        #host {
-            position: absolute;
-            bottom: 5px;
+        #bg {
+            width: 100%;
+            height: 100%;
+            background: url(data:image/svg+xml,%3Csvg%20width%3D%22576px%22%20height%3D%22400px%22%20viewBox%3D%220%200%20576%20400%22%20version%3D%221.1%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20xmlns%3Axlink%3D%22http%3A//www.w3.org/1999/xlink%22%3E%0A%20%20%20%20%3C%21--%20Generator%3A%20Sketch%2045.1%20%2843504%29%20-%20http%3A//www.bohemiancoding.com/sketch%20--%3E%0A%20%20%20%20%3Cdesc%3ECreated%20with%20Sketch.%3C/desc%3E%0A%20%20%20%20%3Cdefs%3E%3C/defs%3E%0A%20%20%20%20%3Cg%20id%3D%223-Blocking-Page%22%20stroke%3D%22none%22%20stroke-width%3D%221%22%20fill%3D%22none%22%20fill-rule%3D%22evenodd%22%20opacity%3D%221%22%3E%0A%20%20%20%20%20%20%20%20%3Cg%20id%3D%22Light-%281920x1200%29%22%20transform%3D%22translate%28-672.000000%2C%20-400.000000%29%22%20fill%3D%22%23CCCCCC%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cg%20id%3D%22Content%22%20transform%3D%22translate%28480.000000%2C%20400.000000%29%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M389.796226%2C0%20L320.241509%2C0%20L215.909434%2C197.826087%20C205.041509%2C219.565217%20192%2C247.826087%20192%2C280.434783%20C192%2C345.652174%20246.339623%2C400%20311.54717%2C400%20C378.928302%2C400%20433.267925%2C345.652174%20433.267925%2C280.434783%20C433.267925%2C226.086957%20398.490566%2C180.434783%20348.498113%2C165.217391%20L389.796226%2C0%20Z%20M724.528302%2C0%20L654.973585%2C0%20L550.641509%2C197.826087%20C539.773585%2C219.565217%20526.732075%2C247.826087%20526.732075%2C280.434783%20C526.732075%2C345.652174%20581.071698%2C400%20646.279245%2C400%20C713.660377%2C400%20768%2C345.652174%20768%2C280.434783%20C768%2C226.086957%20733.222642%2C180.434783%20683.230189%2C165.217391%20L724.528302%2C0%20Z%22%20id%3D%22-%22%3E%3C/path%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3C/g%3E%0A%20%20%20%20%20%20%20%20%3C/g%3E%0A%20%20%20%20%3C/g%3E%0A%3C/svg%3E) no-repeat fixed center;
+            background-size: 574px 400px;
+            top: 0;
             left: 0;
-            right: 0;
+            opacity: 0.3;
+            position: absolute;
+            z-index: 1;
+        }
+
+        .light #bg {
+            opacity: 0.3;
+        }
+
+        .dark #bg {
+            opacity: 0.05;
+        }
+
+        #wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100%;
+        }
+
+        #inner {
+            max-width: 60%;
+            min-width: 400px;
+            padding: 10px;
+        }
+
+        #quote {
+            position: relative;
+            font-size: 45px;
+            line-height: 55px;
+            font-weight: 300;
+            color: #333333;
             text-align: center;
-            padding: 4px;
-            font-size: 14px;
+            z-index: 100;
+        }
+
+        .dark #quote {
+            color: #fff;
+        }
+
+        #author {
+            position: relative;
+            font-size: 30px;
+            color: #777777;
+            font-style: normal;
+            margin-top: 20px;
+            display: block;
+            text-align: center;
+            z-index: 99;
+        }
+
+        .dark #author {
+            color: #fff;
+            opacity: 0.7;
+        }
+
+        #url {
             font-weight: 500;
         }
 
-        #host a {
-            color: #f9fafb;
-            text-decoration: none;
-            font-weight: bold;
+        #info {
+            text-align: center;
+            width: 100%;
+            font-size: 12px;
+            color: #999999;
+            position: absolute;
+            bottom: 10px;
+            font-weight: 300;
+            z-index: 98;
+        }
+
+        #info a {
+            color: #999999;
+        }
+
+        .dark #info {
+            color: #ffffff;
+            opacity: 0.3;
+        }
+
+        .dark #info a {
+            color: #ffffff;
+        }
+
+        @media screen and (max-width: 1300px) {
+            #inner {
+                max-width: 75%;
+            }
+        }
+
+        @media screen and (max-width: 750px),
+        screen and (max-height: 525px) {
+            #bg {
+                background-size: 430px 300px;
+            }
+        }
+
+        @media screen and (max-width: 550px),
+        screen and (max-height: 425px) {
+            #bg {
+                background-size: 287px 200px;
+            }
+        }
+
+        @media screen and (max-width: 350px),
+        screen and (max-height: 325px) {
+            #bg {
+                background-size: 143px 100px;
+            }
+        }
+
+        @media screen and (max-width: 700px) {
+            #inner {
+                max-width: 75%;
+            }
+
+            #quote {
+                font-size: 38px;
+                line-height: 52px;
+            }
+        }
+
+        @media screen and (max-width: 600px) {
+            #quote {
+                font-size: 28px;
+                line-height: 40px;
+            }
+        }
+
+        @media screen and (max-height: 600px) {
+            #quote {
+                font-size: 28px;
+                line-height: 40px;
+            }
+        }
+
+        @media screen and (max-height: 400px) {
+            #quote {
+                font-size: 22px;
+                line-height: 29px;
+            }
+        }
+
+        @media screen and (max-height: 200px) {
+            #quote {
+                font-size: 19px;
+                line-height: 25px;
+            }
+
+            #info {
+                display: none;
+            }
+        }
+
+        /* Hide if on a really small screen (probably a social sharing button) */
+        @media screen and (max-width: 280px) {
+
+            body,
+            html {
+                display: none !important;
+            }
         }
     </style>
 </head>
 
 <body>
-    <script>
-        try {
-            const params = new URLSearchParams(window.location.search);
-            const url = new URL(params.get("url"));
-            if (url && url.host) {
-                if (params.get("loaded") == 1) {
-                    document.location.href = url.toString();
-                } else {
-                    params.set("loaded", 1);
-                    history.replaceState(
-                        null,
-                        null,
-                        "?" + params.toString()
-                    );
-
-                    document.write(
-                        `<div id="host"><a href="${params.get("url")}">${
-                                url.host
-                            }</a> is blocked by Focus</div>`
-                    );
-                }
-            } else {
-                throw new Error("no url found");
-            }
-        } catch (e) {
-            document.write(`<div id="host">blocked by Focus</div>`);
-        }
-    </script>
-    <div id="blocked">
-        <div>
-            <strong>Yesterday</strong> you<br />said <strong>Today</strong>
+    <div id="wrapper">
+        <div id="inner">
+            <blockquote id="quote"></blockquote>
+            <cite id="author"></cite>
+            <div id="bg"></div>
         </div>
+        <div id="info"><a href="" id="url"></a> blocked by <a href="https://heyfocus.com/?utm_source=focus_template">Focus</a> / <a href="" id="toggle-theme">Switch themes</a></div>
     </div>
-    <!-- hello curious observer 👋 -->
+    <script src="block.js"></script>
 </body>
+<!-- Cheers for reading the source 😀  -->
 
 </html>

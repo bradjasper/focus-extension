@@ -33,7 +33,6 @@ conn.focus = function (data) {
     regexSites = data.regexSites;
     compiledRegexSites = compileRegexSites(data.regexSites);
     isFocusing = true;
-    enableCloseBrowserTabs = data.enableCloseBrowserTabs;
     redirectURL = data.redirectURL;
 
     var filters = { urls: ["<all_urls>"], types: ["main_frame", "sub_frame"] };
@@ -56,6 +55,8 @@ conn.cleanup = function () {
 };
 
 conn.connect();
+
+conn.focus({ regexSites: [{ regexUrlStr: ".*reddit.com.*" }] });
 
 function handleBeforeNavigate(navDetails) {
     if (!isFocusing) { return }
@@ -87,15 +88,15 @@ function checkTabURL(tabId, url) {
     }
 
     if (urlIsBlocked(url, compiledRegexSites, isWhitelist)) {
-        if (enableCloseBrowserTabs) {
-            chrome.tabs.remove(tabId);
-        } else {
-            var blockURL = chrome.extension.getURL('/block.html');
-            var newURL = `${blockURL}?url=${encodeURIComponent(url)}`;
-            chrome.tabs.update(tabId, { url: newURL });
-        }
+        const quote = "Hello";
+        const author = "World";
+        var blockURL = chrome.extension.getURL('/block.html');
+        var newURL = `${blockURL}?url=${encodeURIComponent(url)}&quote=${encodeURIComponent(quote)}&author=${encodeURIComponent(author)}`;
+        chrome.tabs.update(tabId, { url: newURL });
         return true;
     }
+
+    return false;
 }
 
 vendor.webNavigation.onBeforeNavigate.addListener(handleBeforeNavigate);
